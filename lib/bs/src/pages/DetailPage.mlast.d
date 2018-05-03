@@ -1,0 +1,1 @@
+src/pages/DetailPage.cmj : src/components/DeleteButton.cmj src/pages/Error.cmj src/pages/Loading.cmj src/components/PublishButton.cmj src/Utils.cmj
