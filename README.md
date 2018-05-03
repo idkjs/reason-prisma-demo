@@ -1,50 +1,37 @@
-<h1 align="center"><strong>Boilerplate for a Basic Fullstack GraphQL App with React</strong></h1>
+# Demo for a Basic Fullstack GraphQL App with [ReasonApollo](https://github.com/apollographql/reason-apollo) / [Prisma](https://prisma.io)
 
-<br />
+# Installing & Running
 
-![](https://imgur.com/ousyQaC.png)
-
-<div align="center"><strong>🚀 Bootstrap your fullstack GraphQL app within seconds</strong></div>
-<div align="center">Basic starter kit for a fullstack GraphQL app with React and Node.js - based on best practices from the GraphQL community.</div>
-
-## Features
-
-- **Scalable GraphQL server:** The server uses [`graphql-yoga`](https://github.com/prisma/graphql-yoga) which is based on Apollo Server & Express
-- **Pre-configured Apollo Client:** The project comes with a preconfigured setup for Apollo Client
-- **GraphQL database:** Includes GraphQL database binding to [Prisma](https://www.prismagraphql.com) (running on MySQL)
-- **Tooling**: Out-of-the-box support for [GraphQL Playground](https://github.com/prisma/graphql-playground) & [query performance tracing](https://github.com/apollographql/apollo-tracing)
-- **Extensible**: Simple and flexible [data model](./database/datamodel.graphql) – easy to adjust and extend
-- **No configuration overhead**: Preconfigured [`graphql-config`](https://github.com/prisma/graphql-config) setup
-
-For a fully-fledged **React & Apollo tutorial**, visit [How to GraphQL](https://www.howtographql.com/react-apollo/0-introduction/). You can more learn about the idea behind GraphQL boilerplates [here](https://blog.graph.cool/graphql-boilerplates-graphql-create-how-to-setup-a-graphql-project-6428be2f3a5).
-
-## Requirements
-
-You need to have the [GraphQL CLI](https://github.com/graphql-cli/graphql-cli) installed to bootstrap your GraphQL server using `graphql create`:
-
-```sh
-npm install -g graphql-cli
-```
-
-## Getting started
-
-```sh
-# 1. Bootstrap GraphQL server in directory `my-app`, based on `react-fullstack-basic` boilerplate
-graphql create my-app --boilerplate react-fullstack-basic
-
-# 2. When prompted, deploy the Prisma service to a _public cluster_
-
-# 3. Navigate into the `server` directory of the new project
-cd my-app/server
-
-# 4. Start the server
-yarn dev # runs server on http://localhost:4000, and opens GraphQL PLayground
-
-# 5. Open a new tab in the terminal and navigate back into my-app;
-# then run the app
+```s
+cd server
+yarn && yarn start
 cd ..
-yarn start
+yarn && yarn start
 ```
+
+## Running two instances
+
+To run to front ends against the server run `yarn start` in root run on your local machine, the run `docker run -p 8080:80 idkjs/crud-image` in another terminal.
+
+Both instance will work against the running server, exactly the same way, in theory. There is some kind of latency on the docker image. The refetch query function seems to not be working quickly enough or its not waiting for a respose. Need to work that out.
+
+## Note on graphql
+
+Only seems to work on graphql@12.3. Otherwise anything above that is throwing a parse(doc) experimental graphql-tag error. Strangely, works on a webpack, no react-scripts version with 13.2.
+
+Culprit is probably refetchqueries and inMemoryCache settings.
+
+## Deploying to Digital Ocean
+
+Building the image in the droplet throws errors with reason so we are building the image on our local machine in its done state. The running that on droplet.
+
+1.  Build the image `docker build -t idkjs/someimage .`
+2.  Test locally:`docker run -p 8080:80 idkjs/someimage`
+3.  Push the image to hub.docker.io: `docker push idkjs/someimage`
+4.  In droplet, `docker pull idkjs/someimage`
+5.  Then `docker run -p 8080:80 idkjs/someimage` or `docker run -d -p 8080:80 idkjs/someimage`
+
+Final Image: idkjs/reason-prisma-basic
 
 ## Documentation
 
@@ -61,20 +48,14 @@ yarn start
 
 ![](https://imgur.com/95faUsa.png)
 
-| File name 　　　　　　　　　　　　　　| Description 　　　　　　　　<br><br>| 
-| :--  | :--         |
-| `├── .graphqlconfig.yml` | Configuration file based on [`graphql-config`](https://github.com/prisma/graphql-config) (e.g. used by GraphQL Playground).|
-| `└── database ` (_directory_) | _Contains all files that are related to the Prisma database service_ |\
-| `　　├── prisma.yml` | The root configuration file for your Prisma database service ([docs](https://www.prismagraphql.com/docs/reference/prisma.yml/overview-and-example-foatho8aip)) |
-| `　　└── datamodel.graphql` | Defines your data model (written in [GraphQL SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51)) |
-| `└── src ` (_directory_) | _Contains the source files for your GraphQL server_ |
-| `　　├── index.js` | The entry point for your GraphQL server |
-| `　　├── schema.graphql` | The **application schema** defining the API exposed to client applications  |
-| `　　└── generated` (_directory_) | _Contains generated files_ |
-| `　　　　└── prisma.grapghql` | The **Prisma database schema** defining the Prisma GraphQL API  |
-
-## Contributing
-
-The GraphQL boilerplates are maintained by the GraphQL community, with official support from the [Apollo](https://dev-blog.apollodata.com) & [Graphcool](https://blog.graph.cool/) teams.
-
-Your feedback is **very helpful**, please share your opinion and thoughts! If you have any questions or want to contribute yourself, join the [`#graphql-boilerplate`](https://graphcool.slack.com/messages/graphql-boilerplate) channel on our [Slack](https://graphcool.slack.com/).
+| File name 　　　　　　　　　　　　　　 | Description 　　　　　　　　<br><br>                                                                                                                           |
+| :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `├── .graphqlconfig.yml`               | Configuration file based on [`graphql-config`](https://github.com/prisma/graphql-config) (e.g. used by GraphQL Playground).                                    |
+| `└── database` (_directory_)           | _Contains all files that are related to the Prisma database service_                                                                                           | \  |
+| `├── prisma.yml`                       | The root configuration file for your Prisma database service ([docs](https://www.prismagraphql.com/docs/reference/prisma.yml/overview-and-example-foatho8aip)) |
+| `└── datamodel.graphql`                | Defines your data model (written in [GraphQL SDL](https://blog.graph.cool/graphql-sdl-schema-definition-language-6755bcb9ce51))                                |
+| `└── src` (_directory_)                | _Contains the source files for your GraphQL server_                                                                                                            |
+| `├── index.js`                         | The entry point for your GraphQL server                                                                                                                        |
+| `├── schema.graphql`                   | The **application schema** defining the API exposed to client applications                                                                                     |
+| `└── generated` (_directory_)          | _Contains generated files_                                                                                                                                     |
+| `└── prisma.grapghql`                  | The **Prisma database schema** defining the Prisma GraphQL API                                                                                                 |
